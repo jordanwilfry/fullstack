@@ -1,123 +1,115 @@
-import { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import Header from './components/Header'
-import Footer from './components/Footer'
-import Tasks from './components/Tasks'
-import AddTask from './components/AddTask'
-import About from './components/About'
+import { useState, useEffect } from "react";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import List from "./components/List";
+import AddStudent from "./components/AddStudent";
 
 const App = () => {
-  const [showAddTask, setShowAddTask] = useState(false)
-  const [tasks, setTasks] = useState([])
+  const [showAddStudent, setShowAddStudent] = useState(false);
+  const [students, setStudents] = useState([]);
 
   useEffect(() => {
-    const getTasks = async () => {
-      const tasksFromServer = await fetchTasks()
-      setTasks(tasksFromServer)
-    }
+    const getStudents = async () => {
+      const StudentsFromServer = await fetchStudents();
+      setStudents(StudentsFromServer);
+    };
 
-    getTasks()
-  }, [])
+    getStudents();
+  }, []);
 
-  // Fetch Tasks
-  const fetchTasks = async () => {
-    const res = await fetch('http://localhost:5000/tasks')
-    const data = await res.json()
+  // Fetch Students
+  const fetchStudents = async () => {
+    const res = await fetch("http://localhost:5000/Students");
+    const data = await res.json();
 
-    return data
-  }
+    return data;
+  };
 
-  // Fetch Task
-  const fetchTask = async (id) => {
-    const res = await fetch(`http://localhost:5000/tasks/${id}`)
-    const data = await res.json()
+  // Fetch Student
+  const fetchStudent = async (id) => {
+    const res = await fetch(`http://localhost:5000/Students/${id}`);
+    const data = await res.json();
+    return data;
+  };
 
-    return data
-  }
-
-  // Add Task
-  const addTask = async (task) => {
-    const res = await fetch('http://localhost:5000/tasks', {
-      method: 'POST',
+  // Add Student
+  const addStudent = async (student) => {
+    const newStudent = { status: 1/10, ...student }
+    const res = await fetch("http://localhost:5000/students", {
+      method: "POST",
       headers: {
-        'Content-type': 'application/json',
+        "Content-type": "application/json",
       },
-      body: JSON.stringify(task),
-    })
+      body: JSON.stringify(newStudent),
+    });
 
-    const data = await res.json()
+    const data = await res.json();
 
-    setTasks([...tasks, data])
+    setStudents([data, ...students]);
 
     // const id = Math.floor(Math.random() * 10000) + 1
-    // const newTask = { id, ...task }
-    // setTasks([...tasks, newTask])
-  }
+    // setStudents([...Students, newStudent])
+  };
 
-  // Delete Task
-  const deleteTask = async (id) => {
-    const res = await fetch(`http://localhost:5000/tasks/${id}`, {
-      method: 'DELETE',
-    })
+  // Delete Student
+  const deleteStudent = async (id) => {
+    const res = await fetch(`http://localhost:5000/Students/${id}`, {
+      method: "DELETE",
+    });
     //We should control the response status to decide if we will change the state or not.
     res.status === 200
-      ? setTasks(tasks.filter((task) => task.id !== id))
-      : alert('Error Deleting This Task')
-  }
+      ? setStudents(students.filter((Student) => Student.id !== id))
+      : alert("Error Deleting This Student");
+  };
 
-  // Toggle Reminder
-  const toggleReminder = async (id) => {
-    const taskToToggle = await fetchTask(id)
-    const updTask = { ...taskToToggle, reminder: !taskToToggle.reminder }
+  // Toggle Presence
+  const togglePresence = async (id) => {
+    const StudentToToggle = await fetchStudent(id);
+    const updStudent = {
+      ...StudentToToggle,
+      present: !StudentToToggle.present,
+    };
 
-    const res = await fetch(`http://localhost:5000/tasks/${id}`, {
-      method: 'PUT',
+    const res = await fetch(`http://localhost:5000/Students/${id}`, {
+      method: "PUT",
       headers: {
-        'Content-type': 'application/json',
+        "Content-type": "application/json",
       },
-      body: JSON.stringify(updTask),
-    })
+      body: JSON.stringify(updStudent),
+    });
 
-    const data = await res.json()
+    const data = await res.json();
 
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, reminder: data.reminder } : task
+    setStudents(
+      students.map((student) =>
+        student.id === id ? { ...student, present: data.present } : student
       )
-    )
-  }
+    );
+  };
 
   return (
-    <Router>
-      <div className='container'>
-        <Header
-          onAdd={() => setShowAddTask(!showAddTask)}
-          showAdd={showAddTask}
-        />
-        <Routes>
-          <Route
-            path='/'
-            element={
-              <>
-                {showAddTask && <AddTask onAdd={addTask} />}
-                {tasks.length > 0 ? (
-                  <Tasks
-                    tasks={tasks}
-                    onDelete={deleteTask}
-                    onToggle={toggleReminder}
-                  />
-                ) : (
-                  'No Tasks To Show'
-                )}
-              </>
-            }
+    <div className="container">
+      <Header
+        onAdd={() => setShowAddStudent(!showAddStudent)}
+        showAdd={showAddStudent}
+        title="Class Follow Up"
+      />
+      <>
+        {showAddStudent && <AddStudent onAdd={addStudent} />}
+        {students.length > 0 ? (
+          <List
+            student={students}
+            onDelete={deleteStudent}
+            onTogglePresence={togglePresence}
           />
-          <Route path='/about' element={<About />} />
-        </Routes>
-        <Footer />
-      </div>
-    </Router>
-  )
-}
+        ) : (
+          "No Students To Show"
+        )}
+      </>
 
-export default App
+      <Footer />
+    </div>
+  );
+};
+
+export default App;

@@ -1,16 +1,11 @@
 {
-  "tasks": [
+  "students": [
     {
-      "id": 1,
-      "text": "Doctors Appointment",
-      "day": "Feb 5th at 2:30pm",
-      "reminder": true
-    },
-    {
-      "text": "Go to school",
-      "day": "Thu 25th at 7:00Am",
-      "reminder": true,
-      "id": 2
+      "status": 0.1,
+      "matriculation": "as",
+      "name": "ss",
+      "present": false,
+      "id": 1
     }
   ]
 }
