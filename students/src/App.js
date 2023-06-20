@@ -19,7 +19,7 @@ const App = () => {
 
   // Fetch Students
   const fetchStudents = async () => {
-    const res = await fetch("http://localhost:5000/Students");
+    const res = await fetch("http://localhost:5001/Students");
     const data = await res.json();
 
     return data;
@@ -27,15 +27,16 @@ const App = () => {
 
   // Fetch Student
   const fetchStudent = async (id) => {
-    const res = await fetch(`http://localhost:5000/Students/${id}`);
+    const res = await fetch(`http://localhost:5001/Students/${id}`);
     const data = await res.json();
     return data;
   };
 
   // Add Student
   const addStudent = async (student) => {
-    const newStudent = { status: 1/10, ...student }
-    const res = await fetch("http://localhost:5000/students", {
+    const status = Math.random()
+    const newStudent = { status: status, ...student }
+    const res = await fetch("http://localhost:5001/students", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -53,7 +54,7 @@ const App = () => {
 
   // Delete Student
   const deleteStudent = async (id) => {
-    const res = await fetch(`http://localhost:5000/Students/${id}`, {
+    const res = await fetch(`http://localhost:5001/Students/${id}`, {
       method: "DELETE",
     });
     //We should control the response status to decide if we will change the state or not.
@@ -70,7 +71,7 @@ const App = () => {
       present: !StudentToToggle.present,
     };
 
-    const res = await fetch(`http://localhost:5000/Students/${id}`, {
+    const res = await fetch(`http://localhost:5001/Students/${id}`, {
       method: "PUT",
       headers: {
         "Content-type": "application/json",
@@ -92,7 +93,7 @@ const App = () => {
       <Header
         onAdd={() => setShowAddStudent(!showAddStudent)}
         showAdd={showAddStudent}
-        title="Class Follow Up"
+        title="Class List"
       />
       <>
         {showAddStudent && <AddStudent onAdd={addStudent} />}

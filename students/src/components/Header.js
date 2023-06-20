@@ -10,6 +10,10 @@ const Header = ({ title, onAdd, showAdd }) => {
         text={showAdd ? "Close" : "Add"}
         onClick={onAdd}
       />
+      <Button
+        color={"black"}
+        text={"Export"}
+      />
     </header>
   );
 };

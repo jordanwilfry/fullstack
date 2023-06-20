@@ -1,11 +1,11 @@
 {
   "students": [
     {
-      "status": 0.1,
-      "matriculation": "as",
-      "name": "ss",
+      "status": 0.007383639408403697,
+      "matriculation": "CT20A222",
+      "name": "jordan",
       "present": false,
-      "id": 1
+      "id": 3
     }
   ]
 }
